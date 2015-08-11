@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Reset
+Color_Off='\e[0m'       # Text Reset
+
+# Regular Colors
+Black='\e[0;30m'        # Black
+Red='\e[0;31m'          # Red
+Green='\e[0;32m'        # Green
+Yellow='\e[0;33m'       # Yellow
+Blue='\e[0;34m'         # Blue
+Purple='\e[0;35m'       # Purple
+Cyan='\e[0;36m'         # Cyan
+White='\e[0;37m'        # White
+
+
+
+echo "I will now attempt list directories that are lacking a video file."
+echo -e "${Color_Off}"
+echo -e "${Red}"
+for dir in ./*
+do
+COUNT=0
+COUNT=$(find "$dir" -iname "*.avi" | wc -l)
+COUNT=$(($COUNT+$(find "$dir" -iname "*.mkv" | wc -l)))
+COUNT=$(($COUNT+$(find "$dir" -iname "*.mp4" | wc -l)))
+if [[ $COUNT = 0 ]]
+then
+    echo "$dir"
+    echo -en "${Color_Off}"
+    read -p "View Directory? " -n 1 -r 
+    echo
+
+    if [[ $REPLY =~ ^[Yy]$ ]] 
+    then
+        ls "$dir"
+        echo -en "${Color_Off}"
+        read -p "Delete Directory? " -n 1 -r 
+        echo
+
+        if [[ $REPLY =~ ^[Yy]$ ]] 
+        then
+               rm -r "$dir"
+        fi
+
+        read -p "Save Name of Directory In List?" -n 1 -r 
+        echo
+
+        if [[ $REPLY =~ ^[Yy]$ ]] 
+        then
+              echo "$dir" >> saved.txt
+        fi
+
+
+    fi
+fi
+done;

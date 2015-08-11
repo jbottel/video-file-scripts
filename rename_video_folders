@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Reset
+Color_Off='\e[0m'       # Text Reset
+
+# Regular Colors
+Black='\e[0;30m'        # Black
+Red='\e[0;31m'          # Red
+Green='\e[0;32m'        # Green
+Yellow='\e[0;33m'       # Yellow
+Blue='\e[0;34m'         # Blue
+Purple='\e[0;35m'       # Purple
+Cyan='\e[0;36m'         # Cyan
+White='\e[0;37m'        # White
+
+
+
+echo "I will now attempt to rename files"
+echo -e "${Color_Off}"
+echo -e "${Green}"
+for dir in ./*
+do
+    #using string:2 because it starts with ./ and rename removes that first dot
+rename -n "s/\./ /g" "${dir:2}";
+echo -e "${Color_Off}";
+read -p "Keep Change?" -n 1 -r 
+echo
+    if [[ $REPLY =~ ^[Yy]$ ]] 
+    then
+    rename "s/\./ /g" "${dir:2}";
+    fi
+
+
+echo -e "${Green}"
+done;
+
+
+echo -e "${Color_Off}"
+read -p "Proceed with Step Two?" -n 1 -r 
+if [[ $REPLY =~ ^[Nn]$ ]] 
+    then
+    echo
+    exit 0
+fi
+
+
+for dir in ./*
+do
+rename -n "s/(\d{4}).+/\(\$1\)/" "$dir";
+echo -e "${Color_Off}";
+read -p "Keep Change?" -n 1 -r 
+echo
+    if [[ $REPLY =~ ^[Yy]$ ]] 
+    then
+    rename "s/(\d{4}).+/\(\$1\)/" "$dir";
+    fi
+echo -e "${Green}"
+done;
